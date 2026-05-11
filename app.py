@@ -17,6 +17,36 @@ def healthCheck():
     return "{'online':'true'}", 200
 
 
+@app.get("/avicultores/<int:id>")
+def getByIdAvicultores(id: int):
+    avicultor = None
+    try:
+        conn = get_conn()
+        # 2 - Recuperar o cursor
+        cursor = conn.cursor()
+        # 3 - Preparar a consultar: query | statement
+        # stmt = f"select * from tb_avicultores where id='{id}'"
+        # cursor.execute(stmt)
+        stmt = "select * from tb_avicultores where id=?"
+        cursor.execute(stmt, (id, ))
+        # 4.1 - Iterar nos resultados: resultset (fetchall, fecthone)
+        row = cursor.fetchone()
+        if row is not None:
+            id = row[0]
+            nome = row[1]
+            nascimento = row[2]
+            cpf = row[3]
+            caf = row[4]
+            avicultor = Avicultor(id, nome, nascimento, cpf, caf)
+        else:
+            return {"mensagem": "O avicultor não foi encontrado"}, 404
+
+    except sqlite3.Error as e:
+        print(e)
+
+    return avicultor.toDict(), 200
+
+
 @app.get("/avicultores")
 def getAvicultores():
     avicultores = []
@@ -72,6 +102,9 @@ def postAvicultores():
         cursor.execute(
             "INSERT INTO tb_avicultores(nome, nascimento, cpf, caf) VALUES(?, ?, ?, ?)", (avicultorData["nome"], avicultorData["nascimento"], avicultorData["cpf"], avicultorData["caf"]))
 
+        id = cursor.lastrowid
+        avicultorData["id"] = id
+
         # 4.2 - Confirmar operação.
         conn.commit()
     except sqlite3.Error as e:
@@ -83,7 +116,7 @@ def postAvicultores():
         if conn:
             conn.close()
 
-    return avicultorJson, 200
+    return avicultorData, 200
 
 
 @app.put("/avicultores")
@@ -91,9 +124,22 @@ def putAvicultores():
     pass
 
 
-@app.delete("/avicultores")
-def deleteAvicultores():
-    pass
+@app.delete("/avicultores/<int:id>")
+def deleteAvicultores(id: int):
+    try:
+        conn = get_conn()
+        # 2 - Recuperar o cursor
+        cursor = conn.cursor()
+        # Antes de remover verificar se existe, caso não existe enviar mensagem de entidade não existente
+        # 3 - Preparar a consultar: query | statement
+        stmt = "delete from tb_avicultores where id=?"
+        cursor.execute(stmt, (id, ))
+        conn.commit()
+
+    except sqlite3.Error as e:
+        print(e)
+
+    return {"mensagem": "Avicultor removido com sucesso!"}, 202
 
 # /avicultores - nome, cpf, caf, nascimento
 # /avicolas
