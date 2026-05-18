@@ -15,7 +15,6 @@ def get_conn():
 
 @app.teardown_appcontext
 def close_connection(exception):
-    print("------------ Tou finalizando a requisição!!!")
     conn = getattr(g, '_database', None)
     if conn is not None:
         conn.close()

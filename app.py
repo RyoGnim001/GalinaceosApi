@@ -1,10 +1,11 @@
 import sqlite3
-from flask import request, jsonify
+from flask import request, jsonify, current_app
 from marshmallow import ValidationError
 
 from models.Avicultor import Avicultor, AvicultorSchema
 from helpers.application import app
 from helpers.database import get_conn
+from helpers.logger import logger
 
 
 @app.get("/")
@@ -19,18 +20,25 @@ def healthCheck():
 
 @app.get("/avicultores/<int:id>")
 def getByIdAvicultores(id: int):
+    logger.info(f"Listando avicultores pelo id: {id}")
     avicultor = None
+    # Logger flask
+    # logger = current_app.logger
+
     try:
+        logger.info("Abrindo a conexão com o banco")
         conn = get_conn()
         # 2 - Recuperar o cursor
         cursor = conn.cursor()
         # 3 - Preparar a consultar: query | statement
         # stmt = f"select * from tb_avicultores where id='{id}'"
         # cursor.execute(stmt)
+        logger.info("Preparando statement.")
         stmt = "select * from tb_avicultores where id=?"
         cursor.execute(stmt, (id, ))
         # 4.1 - Iterar nos resultados: resultset (fetchall, fecthone)
         row = cursor.fetchone()
+        logger.info("Lendo informações do resultado da consulta ao banco")
         if row is not None:
             id = row[0]
             nome = row[1]
@@ -42,7 +50,7 @@ def getByIdAvicultores(id: int):
             return {"mensagem": "O avicultor não foi encontrado"}, 404
 
     except sqlite3.Error as e:
-        print(e)
+        logger.error(e)
 
     return avicultor.toDict(), 200
 
