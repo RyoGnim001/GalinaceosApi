@@ -1,6 +1,13 @@
-# Manipulação do dados com o banco de dados
+from helpers.database import get_conn
+from helpers.logger import logger
+
+'''
+  Manipulação do banco de dados para a entidade Avicultor.
+'''
+
+
 class AvicultorRepository():
-    def listarByIdAvicultores(self):
+    def getByIdAvicultor(self, id):
         conn = get_conn()
         # 2 - Recuperar o cursor
         cursor = conn.cursor()
@@ -10,5 +17,4 @@ class AvicultorRepository():
         cursor.execute(stmt, (id, ))
         # 4.1 - Iterar nos resultados: resultset (fetchall, fecthone)
         row = cursor.fetchone()
-
         return row
