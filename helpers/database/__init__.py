@@ -2,8 +2,9 @@ import sqlite3
 from flask import g
 
 from helpers.application import app
+from helpers.enviroment import enviroment
 
-DATABASE_NAME = "avicola.db"
+DATABASE_NAME = enviroment.get("DB_NAME")
 
 
 def get_conn():
