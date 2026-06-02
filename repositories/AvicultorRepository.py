@@ -7,14 +7,42 @@ from helpers.logger import logger
 
 
 class AvicultorRepository():
+    def getAll(self):
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM tb_avicultores")
+        return cursor.fetchall()
+
     def getByIdAvicultor(self, id):
         conn = get_conn()
-        # 2 - Recuperar o cursor
         cursor = conn.cursor()
-        # 3 - Preparar a consultar: query | statement
         logger.info("Preparando statement.")
-        stmt = "select * from tb_avicultores where id=?"
-        cursor.execute(stmt, (id, ))
-        # 4.1 - Iterar nos resultados: resultset (fetchall, fecthone)
-        row = cursor.fetchone()
-        return row
+        cursor.execute("SELECT * FROM tb_avicultores WHERE id=?", (id,))
+        return cursor.fetchone()
+
+    def insert(self, nome, nascimento, cpf, caf):
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO tb_avicultores(nome, nascimento, cpf, caf) VALUES(?, ?, ?, ?)",
+            (nome, nascimento, cpf, caf)
+        )
+        conn.commit()
+        return cursor.lastrowid
+
+    def update(self, id, nome, nascimento, cpf, caf):
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE tb_avicultores SET nome=?, nascimento=?, cpf=?, caf=? WHERE id=?",
+            (nome, nascimento, cpf, caf, id)
+        )
+        conn.commit()
+        return cursor.rowcount
+
+    def delete(self, id):
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM tb_avicultores WHERE id=?", (id,))
+        conn.commit()
+        return cursor.rowcount
