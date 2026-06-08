@@ -1,6 +1,6 @@
 -- Tabela de avicultores
 CREATE TABLE IF NOT EXISTS tb_avicultor(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     nome TEXT NOT NULL,
     nascimento DATE NOT NULL,
     cpf VARCHAR(11) NOT NULL UNIQUE,
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS tb_avicultor(
 
 -- Tabela de aviários
 CREATE TABLE IF NOT EXISTS tb_aviario(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     nome TEXT NOT NULL,
     capacidade INTEGER NOT NULL
 );
