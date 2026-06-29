@@ -1,0 +1,12 @@
+#Sempre que você for iniciar o psql(terminal shell), você irá iniciar dando enter e colocando a senha
+#logo em seguida você estará dentro do postgres, após isso basta entrar no servidor da coluna
+
+\c galinaceos_db
+
+#Verificando a conexão com o banco de dados
+
+uv run python -c "
+from app import create_app
+app = create_app()
+print('Conexão estabelecida com sucesso!')
+"
