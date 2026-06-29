@@ -1,0 +1,6 @@
+/galinaceos/?SIST_CRIA=1
+/galinaceos/?NIV_TERR=BR
+/galinaceos/?COD_TERR=11
+/galinaceos/?NOM_TERR=Brasil
+/galinaceos/?CL_GAL=10
+/galinaceos/?NIV_TERR=BR&CL_GAL=10&SIST_CRIA=1
