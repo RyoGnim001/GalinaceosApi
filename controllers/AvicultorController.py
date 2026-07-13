@@ -10,9 +10,24 @@ avicultor_bp = Blueprint('avicultor', __name__, url_prefix='/avicultores')
 
 @avicultor_bp.get("/")
 def getAvicultores():
+    # nome, cpf, caf
     logger.info("Listando todos os avicultores")
-    avicultores = AvilcultorService().getAll()
-    return [a.toDict() for a in avicultores], 200
+    all_params_dictionary = request.args.to_dict()
+    print("Estrutura dos parametros")
+    print(all_params_dictionary)
+
+    meu_dicionario = {'nome': 'Maria', 'cpf': '111', 'caf': '1010'}
+    for key, value in meu_dicionario.items():
+        print(f"Chave: {key}")
+        print(f"Valor: {value}")
+    # nome = request.args.get("nome")
+    # cpf = request.args.get("cpf")
+    # caf = request.args.get("caf")
+    # avicultores = AvilcultorService().getAll(nome, cpf, caf)
+
+    # return [a.toDict() for a in avicultores], 200
+
+    return '', 200
 
 
 @avicultor_bp.get("/<int:id>")
