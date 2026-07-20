@@ -1,70 +1,52 @@
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify
+from flask_restful import Resource
 from marshmallow import ValidationError
 
 from models.Avicultor import AvicultorSchema
 from services.AvicultoresService import AvilcultorService
 from helpers.logger import logger
 
-avicultor_bp = Blueprint('avicultor', __name__, url_prefix='/avicultores')
+CAMPOS_FILTRO = {"nome", "cpf", "caf"}
 
 
-@avicultor_bp.get("/")
-def getAvicultores():
-    # nome, cpf, caf
-    logger.info("Listando todos os avicultores")
-    all_params_dictionary = request.args.to_dict()
-    print("Estrutura dos parametros")
-    print(all_params_dictionary)
+class AvicultoresController(Resource):
+    def get(self):
+        logger.info("Listando todos os avicultores")
+        filtros = {k: v for k, v in request.args.items()
+                   if k in CAMPOS_FILTRO and v}
+        avicultores = AvilcultorService().getAll(filtros)
+        return [a.toDict() for a in avicultores], 200
 
-    meu_dicionario = {'nome': 'Maria', 'cpf': '111', 'caf': '1010'}
-    for key, value in meu_dicionario.items():
-        print(f"Chave: {key}")
-        print(f"Valor: {value}")
-    # nome = request.args.get("nome")
-    # cpf = request.args.get("cpf")
-    # caf = request.args.get("caf")
-    # avicultores = AvilcultorService().getAll(nome, cpf, caf)
-
-    # return [a.toDict() for a in avicultores], 200
-
-    return '', 200
+    def post(self):
+        try:
+            data = AvicultorSchema().load(request.get_json())
+            avicultor = AvilcultorService().create(data)
+            return avicultor.toDict(), 201
+        except ValidationError as err:
+            return jsonify(err.messages), 400
 
 
-@avicultor_bp.get("/<int:id>")
-def getByIdAvicultores(id: int):
-    logger.info(f"Listando avicultor pelo id: {id}")
-    avicultor = AvilcultorService().getByIdAvicultor(id)
-    if avicultor is None:
-        return {"mensagem": "O avicultor não foi encontrado"}, 404
-    return avicultor.toDict(), 200
-
-
-@avicultor_bp.post("/")
-def postAvicultores():
-    try:
-        data = AvicultorSchema().load(request.get_json())
-        avicultor = AvilcultorService().create(data)
-        return avicultor.toDict(), 201
-    except ValidationError as err:
-        return jsonify(err.messages), 400
-
-
-@avicultor_bp.put("/<int:id>")
-def putAvicultores(id: int):
-    try:
-        data = AvicultorSchema().load(request.get_json())
-        avicultor = AvilcultorService().update(id, data)
+class AvicultorController(Resource):
+    def get(self, avicultor_id):
+        logger.info(f"Listando avicultor pelo id: {avicultor_id}")
+        avicultor = AvilcultorService().getByIdAvicultor(avicultor_id)
         if avicultor is None:
             return {"mensagem": "O avicultor não foi encontrado"}, 404
         return avicultor.toDict(), 200
-    except ValidationError as err:
-        return jsonify(err.messages), 400
 
+    def put(self, avicultor_id):
+        try:
+            data = AvicultorSchema().load(request.get_json())
+            avicultor = AvilcultorService().update(avicultor_id, data)
+            if avicultor is None:
+                return {"mensagem": "O avicultor não foi encontrado"}, 404
+            return avicultor.toDict(), 200
+        except ValidationError as err:
+            return jsonify(err.messages), 400
 
-@avicultor_bp.delete("/<int:id>")
-def deleteAvicultores(id: int):
-    logger.info(f"Removendo avicultor id: {id}")
-    removido = AvilcultorService().delete(id)
-    if not removido:
-        return {"mensagem": "O avicultor não foi encontrado"}, 404
-    return {"mensagem": "Avicultor removido com sucesso!"}, 200
+    def delete(self, avicultor_id):
+        logger.info(f"Removendo avicultor id: {avicultor_id}")
+        removido = AvilcultorService().delete(avicultor_id)
+        if not removido:
+            return {"mensagem": "O avicultor não foi encontrado"}, 404
+        return {"mensagem": "Avicultor removido com sucesso!"}, 200

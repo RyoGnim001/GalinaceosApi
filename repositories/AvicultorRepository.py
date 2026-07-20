@@ -7,22 +7,18 @@ from helpers.logger import logger
 
 
 class AvicultorRepository():
-    def getAll(self, nome=None, cpf=None, caf=None):
+    def getAll(self, filtros: dict = None):
         conn = get_conn()
         cursor = conn.cursor()
-        # Como eu adiciono os filtros na consulta?
-        # nome = Maria
-        query = f"SELECT * FROM tb_avicultor"
-        if (nome is not None):
-            query = query + " WHERE nome = {nome}"
+        query = "SELECT * FROM tb_avicultor"
+        values = []
 
-        if (cpf is not None):
-            query = query + " WHERE cpf = {cpf}"
+        if filtros:
+            conditions = [f"{campo} = %s" for campo in filtros]
+            values = list(filtros.values())
+            query += " WHERE " + " AND ".join(conditions)
 
-        if (caf is not None):
-            query = query + " WHERE caf = {caf}"
-
-        cursor.execute(query)
+        cursor.execute(query, values)
         return cursor.fetchall()
 
     def getByIdAvicultor(self, id):
