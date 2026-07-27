@@ -1,8 +1,8 @@
 from flask import request, jsonify
-from flask_restful import Resource
+from flask_restful import Resource, marshal
 from marshmallow import ValidationError
 
-from models.Avicultor import AvicultorSchema
+from models.Avicultor import AvicultorSchema, avicultor_fields, avicultor_id_fields
 from services.AvicultoresService import AvilcultorService
 from helpers.logger import logger
 
@@ -15,7 +15,7 @@ class AvicultoresController(Resource):
         filtros = {k: v for k, v in request.args.items()
                    if k in CAMPOS_FILTRO and v}
         avicultores = AvilcultorService().getAll(filtros)
-        return [a.toDict() for a in avicultores], 200
+        return [marshal(a, avicultor_fields) for a in avicultores], 200
 
     def post(self):
         try:
@@ -32,7 +32,7 @@ class AvicultorController(Resource):
         avicultor = AvilcultorService().getByIdAvicultor(avicultor_id)
         if avicultor is None:
             return {"mensagem": "O avicultor não foi encontrado"}, 404
-        return avicultor.toDict(), 200
+        return marshal(avicultor, avicultor_fields), 200
 
     def put(self, avicultor_id):
         try:

@@ -1,4 +1,18 @@
 from marshmallow import Schema, fields, validate
+from flask_restful import fields as dto
+
+
+avicultor_fields = {
+    'id': dto.Integer,
+    'nome': dto.String,
+    'nascimento': dto.DateTime(dt_format='iso8601'),
+    'cpf': dto.String,
+    'caf': dto.String,
+}
+
+avicultor_id_fields = {
+    'id': dto.Integer
+}
 
 
 class Avicultor():
