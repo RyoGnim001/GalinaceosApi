@@ -1,6 +1,13 @@
 from marshmallow import Schema, fields, validate
 from flask_restful import fields as dto
 
+from datetime import datetime
+from sqlalchemy import DateTime
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
+
+from helpers.database import db
+
 
 avicultor_fields = {
     'id': dto.Integer,
@@ -15,7 +22,13 @@ avicultor_id_fields = {
 }
 
 
-class Avicultor():
+class Avicultor(db.Model):
+    __tablename__ = "tb_avicultor"
+
+    id: Mapped[int] = mapped_column("id_avicultor", primary_key=True)
+    nome: Mapped[str] = mapped_column(String())
+    nascimento: Mapped[datetime] = mapped_column(DateTime)
+
     def __init__(self, id, nome, nascimento, cpf, caf):
         self.id = id
         self.nome = nome
