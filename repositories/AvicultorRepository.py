@@ -1,5 +1,8 @@
-from helpers.database import get_conn
+from sqlalchemy import select
+
+from helpers.database import db
 from helpers.logger import logger
+from models.Avicultor import Avicultor
 
 '''
   Manipulação do banco de dados para a entidade Avicultor.
@@ -8,49 +11,37 @@ from helpers.logger import logger
 
 class AvicultorRepository():
     def getAll(self, filtros: dict = None):
-        conn = get_conn()
-        cursor = conn.cursor()
-        query = "SELECT * FROM tb_avicultor"
-        values = []
-
+        stmt = select(Avicultor)
         if filtros:
-            conditions = [f"{campo} = %s" for campo in filtros]
-            values = list(filtros.values())
-            query += " WHERE " + " AND ".join(conditions)
-
-        cursor.execute(query, values)
-        return cursor.fetchall()
+            stmt = stmt.filter_by(**filtros)
+        return db.session.execute(stmt).scalars().all()
 
     def getByIdAvicultor(self, id):
-        conn = get_conn()
-        cursor = conn.cursor()
-        logger.info("Preparando statement.")
-        cursor.execute("SELECT * FROM tb_avicultor WHERE id=%s", (id,))
-        return cursor.fetchone()
+        logger.info("Consultando avicultor pelo id.")
+        return db.session.get(Avicultor, id)
 
     def insert(self, nome, nascimento, cpf, caf):
-        conn = get_conn()
-        cursor = conn.cursor()
-        id = cursor.execute(
-            "INSERT INTO tb_avicultor(nome, nascimento, cpf, caf) VALUES(%s, %s, %s, %s)",
-            (nome, nascimento, cpf, caf)
-        )
-        conn.commit()
-        return cursor.lastrowid
+        avicultor = Avicultor(None, nome, nascimento, cpf, caf)
+        db.session.add(avicultor)
+        db.session.commit()
+        logger.info(f"Avicultor inserido com id: {avicultor.id}")
+        return avicultor
 
     def update(self, id, nome, nascimento, cpf, caf):
-        conn = get_conn()
-        cursor = conn.cursor()
-        cursor.execute(
-            "UPDATE tb_avicultor SET nome=%s, nascimento=%s, cpf=%s, caf=%s WHERE id=%s",
-            (nome, nascimento, cpf, caf, id)
-        )
-        conn.commit()
-        return cursor.rowcount
+        avicultor = db.session.get(Avicultor, id)
+        if avicultor is None:
+            return None
+        avicultor.nome = nome
+        avicultor.nascimento = nascimento
+        avicultor.cpf = cpf
+        avicultor.caf = caf
+        db.session.commit()
+        return avicultor
 
     def delete(self, id):
-        conn = get_conn()
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM tb_avicultor WHERE id=%s", (id,))
-        conn.commit()
-        return cursor.rowcount
+        avicultor = db.session.get(Avicultor, id)
+        if avicultor is None:
+            return False
+        db.session.delete(avicultor)
+        db.session.commit()
+        return True

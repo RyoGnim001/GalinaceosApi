@@ -14,7 +14,6 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
-
 '''
     Conexão com o banco - Legado
 '''

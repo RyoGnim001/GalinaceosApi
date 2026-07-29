@@ -15,13 +15,13 @@ class AvicultoresController(Resource):
         filtros = {k: v for k, v in request.args.items()
                    if k in CAMPOS_FILTRO and v}
         avicultores = AvilcultorService().getAll(filtros)
-        return [marshal(a, avicultor_fields) for a in avicultores], 200
+        return marshal(avicultores, avicultor_fields), 200
 
     def post(self):
         try:
             data = AvicultorSchema().load(request.get_json())
             avicultor = AvilcultorService().create(data)
-            return avicultor.toDict(), 201
+            return marshal(avicultor, avicultor_fields), 201
         except ValidationError as err:
             return jsonify(err.messages), 400
 
@@ -40,7 +40,7 @@ class AvicultorController(Resource):
             avicultor = AvilcultorService().update(avicultor_id, data)
             if avicultor is None:
                 return {"mensagem": "O avicultor não foi encontrado"}, 404
-            return avicultor.toDict(), 200
+            return marshal(avicultor, avicultor_fields), 200
         except ValidationError as err:
             return jsonify(err.messages), 400
 
