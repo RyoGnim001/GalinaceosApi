@@ -1,0 +1,24 @@
+-- Tabela de avicultores
+CREATE TABLE IF NOT EXISTS tb_avicultor(
+    id SERIAL PRIMARY KEY,
+    nome TEXT NOT NULL,
+    nascimento DATE NOT NULL,
+    cpf VARCHAR(11) NOT NULL UNIQUE,
+    caf VARCHAR(10) NOT NULL
+);
+
+-- Tabela de endereços
+CREATE TABLE IF NOT EXISTS tb_endereco(
+    id SERIAL PRIMARY KEY,
+    logradouro TEXT,
+    cep VARCHAR(8) NOT NULL,
+    numero INTEGER,
+    avicultor_id INTEGER NOT NULL REFERENCES tb_avicultor(id)
+);
+
+-- Tabela de aviários
+CREATE TABLE IF NOT EXISTS tb_aviario(
+    id SERIAL PRIMARY KEY,
+    nome TEXT NOT NULL,
+    capacidade INTEGER NOT NULL
+);

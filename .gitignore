@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python-generated files
 __pycache__/
 *.py[oc]
@@ -9,3 +10,11 @@ wheels/
 # Virtual environments
 .venv
 .env
+=======
+*.pyc
+.env
+*.log
+*.db
+*.pyc
+__pycache__/*
+>>>>>>> avicultor/sqlalchemy
