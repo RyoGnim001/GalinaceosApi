@@ -1,8 +1,8 @@
 from marshmallow import ValidationError
 
-from helpers.logger import logger
-from repositories.EnderecoRepository import EnderecoRepository
-from services.AvicultoresService import AvilcultorService
+from app.helpers.logger import logger
+from app.repository.EnderecoRepository import EnderecoRepository
+from app.services.AvicultoresService import AvilcultorService
 
 
 class EnderecoService():

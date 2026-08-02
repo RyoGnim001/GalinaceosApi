@@ -1,5 +1,5 @@
 import psycopg2
-from helpers.logger import logger
+from app.helpers.logger import logger
 
 DATABASE_NAME = "avicola"
 DATABASE_USER = "postgres"

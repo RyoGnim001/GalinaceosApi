@@ -1,8 +1,8 @@
 from sqlalchemy import select
 
 from helpers.database import db
-from helpers.logger import logger
-from models.Avicultor import Avicultor
+from app.helpers.logger import logger
+from app.models.Avicultorltorltor import Avicultor
 
 '''
   Manipulação do banco de dados para a entidade Avicultor.

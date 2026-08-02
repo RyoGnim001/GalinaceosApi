@@ -2,9 +2,9 @@ from flask import request, jsonify
 from flask_restful import Resource, marshal
 from marshmallow import ValidationError
 
-from models.Avicultor import AvicultorSchema, avicultor_fields, avicultor_id_fields
-from services.AvicultoresService import AvilcultorService
-from helpers.logger import logger
+from app.models.Avicultorltorltor import AvicultorSchema, avicultor_fields, avicultor_id_fields
+from app.services.AvicultoresService import AvilcultorService
+from app.helpers.logger import logger
 
 CAMPOS_FILTRO = {"nome", "cpf", "caf"}
 

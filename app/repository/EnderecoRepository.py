@@ -1,8 +1,8 @@
 from sqlalchemy import select
 
 from helpers.database import db
-from helpers.logger import logger
-from models.Endereco import Endereco
+from app.helpers.logger import logger
+from app.models.Endereco import Endereco
 
 '''
   Manipulação do banco de dados para a entidade Endereco.

@@ -2,9 +2,9 @@ from flask import request, jsonify
 from flask_restful import Resource, marshal
 from marshmallow import ValidationError
 
-from models.Endereco import EnderecoSchema, endereco_fields
-from services.EnderecoService import EnderecoService
-from helpers.logger import logger
+from app.models.Endereco import EnderecoSchema, endereco_fields
+from app.services.EnderecoService import EnderecoService
+from app.helpers.logger import logger
 
 CAMPOS_FILTRO = {"avicultor_id", "cep"}
 
