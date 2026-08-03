@@ -1,13 +1,13 @@
-from flask_restful import dto
+from flask_restful import fields
 
 endereco_fields = {
-    'id': dto.Integer,
-    'logradouro': dto.String,
-    'cep': dto.String,
-    'numero': dto.Integer,
-    'avicultor_id': dto.Integer,
+    'id': fields.Integer,
+    'logradouro': fields.String,
+    'cep': fields.String,
+    'numero': fields.Integer,
+    'avicultor_id': fields.Integer,
 }
 
 endereco_id_fields = {
-    'id': dto.Integer
+    'id': fields.Integer
 }

@@ -2,9 +2,9 @@ from flask import Flask
 from flask_restful import Api
 from dotenv import load_dotenv
 
-from helpers.cors import cors
-from helpers.database import db
-from helpers.enviroment import enviroment
+from app.helpers.cors import cors
+from app.helpers.database import db
+from app.helpers.enviroment import enviroment
 
 load_dotenv()
 

@@ -1,7 +1,7 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema, fields
 
 class AvicultorSchema(Schema):
-    nome = fields.Str(required=True)
+    nome = fields.String(required=True)
     nascimento = fields.Date(required=True)
-    cpf = fields.Str(required=True, validate=validate.Length(max=11))
-    caf = fields.Str(required=True)
+    cpf = fields.String(required=True)
+    caf = fields.String(required=True)

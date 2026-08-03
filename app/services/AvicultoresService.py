@@ -1,5 +1,5 @@
 from app.helpers.logger import logger
-from app.repository.AvicultorRepository import AvicultorRepository
+from app.repositories.AvicultorRepository import AvicultorRepository
 
 
 class AvilcultorService():

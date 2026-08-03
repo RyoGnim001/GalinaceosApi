@@ -3,7 +3,7 @@ from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
 from flask import current_app
 
-from helpers.application import app
+from app.helpers.application import app
 
 # logger = app.logger
 # logger =  current_app.logger

@@ -7,11 +7,12 @@ from app.models.classe_galinaceos import ClasseGalinaceos
 class GalinaceosRepository:
     @staticmethod
     def buscar(filtros):
-        query = db.session.query(Galinaceos)\
-            .join(SistemaCriacao, Galinaceos.sist_cria_id == SistemaCriacao.id)\
-            .join(Territorio, Galinaceos.territorio_id == Territorio.id)\
-            .join(ClasseGalinaceos, Galinaceos.cl_gal_id == ClasseGalinaceos.id)
-
+        query = (
+            db.session.query(Galinaceos)
+            .join(Galinaceos.sistema_criacao)
+            .join(Galinaceos.territorio)
+            .join(Galinaceos.classe_galinaceos)
+        )
         if filtros.get("SIST_CRIA"):
             query = query.filter(SistemaCriacao.codigo == filtros["SIST_CRIA"])
 
@@ -25,6 +26,8 @@ class GalinaceosRepository:
             query = query.filter(Territorio.nome_territorio == filtros["NOM_TERR"])
 
         if filtros.get("CL_GAL"):
-            query = query.filter(ClasseGalinaceos.codigo == int(filtros["CL_GAL"]))
+            query = query.filter(
+                ClasseGalinaceos.codigo == int(filtros["CL_GAL"])
+        )
 
         return query.all()

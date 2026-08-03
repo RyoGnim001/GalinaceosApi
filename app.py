@@ -1,7 +1,15 @@
-from helpers.application import app, api
-from helpers.database import db
+from app.helpers.application import app, api
+from app.helpers.database import db
+from flasgger import Swagger
 
-# Avicultor
+Swagger(app)
+
+# Controllers
+from app.controllers.IndexController import (
+    IndexController,
+    HealthController
+)
+
 from app.controllers.AvicultorController import (
     AvicultoresController,
     AvicultorController
@@ -10,11 +18,16 @@ from app.controllers.AvicultorController import (
 from app.controllers.EnderecoController import (
     EnderecosController,
     EnderecoController
+)   
+
+from app.controllers.AviculaController import (
+    AviculasController,
+    AviculaController
 )
 
-# Galináceos
-from app.controllers.GalinaceosController import (
-    GalinaceosController
+from app.controllers.AviarioController import (
+    AviariosController,
+    AviarioController
 )
 
 from app.controllers.GalpaoController import (
@@ -22,31 +35,78 @@ from app.controllers.GalpaoController import (
     GalpaoController
 )
 
-from app.controllers.AvicolaController import (
-    AvicolasController,
-    AvicolaController
+from app.controllers.GalinaceosController import (
+    GalinaceosController
 )
 
-from controllers.IndexController import (
-    IndexController,
-    HealthController
-)
+# Models
+from app.models.Avicultor import Avicultor
+from app.models.Endereco import Endereco
+from app.models.Avicula import Avicula
+from app.models.Aviario import Aviario
+from app.models.Galpao import Galpao
 
-api.add_resource(IndexController, "/")
+from app.models.galinaceos import Galinaceos
+from app.models.classe_galinaceos import ClasseGalinaceos
+from app.models.sistema_criacao import SistemaCriacao
+from app.models.territorio import Territorio
+
+# ============================
+# Rotas Gerais
+# ============================
+
+api.add_resource(IndexController, "/") #ok
 api.add_resource(HealthController, "/health")
 
-api.add_resource(AvicultoresController, "/avicultores")
+# ============================
+# Avicultor
+# ============================
+
+api.add_resource(AvicultoresController, "/avicultores") #ok
 api.add_resource(AvicultorController, "/avicultores/<int:avicultor_id>")
 
-api.add_resource(EnderecosController, "/enderecos")
+# ============================
+# Endereço
+# ============================
+
+api.add_resource(EnderecosController, "/enderecos") #ok
 api.add_resource(EnderecoController, "/enderecos/<int:endereco_id>")
 
-api.add_resource(GalinaceosController, "/galinaceos")
-api.add_resource(GalpoesController, "/galpoes")
+# ============================
+# Avícola
+# ============================
+
+api.add_resource(AviculasController, "/avicola") #ok
+api.add_resource(AviculaController, "/avicola/<int:avicola_id>")
+
+# ============================
+# Aviário
+# ============================
+
+api.add_resource(AviariosController, "/aviarios") #ok
+api.add_resource(AviarioController, "/aviarios/<int:aviario_id>")
+
+# ============================
+# Galpão
+# ============================
+
+api.add_resource(GalpoesController, "/galpoes") #ok
 api.add_resource(GalpaoController, "/galpoes/<int:galpao_id>")
 
-api.add_resource(AvicolasController, "/avicola")
-api.add_resource(AvicolaController, "/avicola/<int:avicola_id>")
+# ============================
+# Galináceos
+# ============================
+
+api.add_resource(GalinaceosController, "/galinaceos") #ok
+
+# ============================
+# Criação das tabelas
+# ============================
 
 with app.app_context():
     db.create_all()
+
+print(app.url_map)
+
+if __name__ == "__main__":
+    app.run(debug=True)

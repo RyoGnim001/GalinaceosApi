@@ -1,48 +1,52 @@
-from marshmallow import ValidationError
-
+from app.repositories.EnderecoRepository import EnderecoRepository
+from app.repositories.AvicultorRepository import AvicultorRepository
 from app.helpers.logger import logger
-from app.repository.EnderecoRepository import EnderecoRepository
-from app.services.AvicultoresService import AvilcultorService
 
 
-class EnderecoService():
+class EnderecoService:
+
     def __init__(self):
         self.enderecoRepository = EnderecoRepository()
+        self.avicultorRepository = AvicultorRepository()
 
-    def _validarAvicultor(self, avicultor_id):
-        avicultor = AvilcultorService().getByIdAvicultor(avicultor_id)
-        if avicultor is None:
-            raise ValidationError({"avicultor_id": ["Avicultor não encontrado."]})
-
-    def getAll(self, filtros: dict = None):
-        enderecos = self.enderecoRepository.getAll(filtros)
-        logger.info(f"Retornando {len(enderecos)} endereços")
-        return enderecos
+    def getAll(self, filtros=None):
+        return self.enderecoRepository.getAll(filtros)
 
     def getByIdEndereco(self, id):
-        endereco = self.enderecoRepository.getByIdEndereco(id)
-        logger.info("Lendo informações do resultado da consulta ao banco")
-        return endereco
+        return self.enderecoRepository.getByIdEndereco(id)
+
+    def _validarAvicultor(self, avicultor_id):
+        avicultor = self.avicultorRepository.getByIdAvicultor(avicultor_id)
+
+        if avicultor is None:
+            raise Exception("Avicultor não encontrado.")
 
     def create(self, data):
+
         self._validarAvicultor(data["avicultor_id"])
+
         endereco = self.enderecoRepository.insert(
-            data.get("logradouro"), data["cep"], data.get("numero"), data["avicultor_id"]
+            data.get("logradouro"),
+            data["cep"],
+            data.get("numero"),
+            data["avicultor_id"]
         )
+
         logger.info(f"Endereço criado com id: {endereco.id}")
+
         return endereco
 
     def update(self, id, data):
+
         self._validarAvicultor(data["avicultor_id"])
-        endereco = self.enderecoRepository.update(
-            id, data.get("logradouro"), data["cep"], data.get("numero"), data["avicultor_id"]
+
+        return self.enderecoRepository.update(
+            id,
+            data.get("logradouro"),
+            data["cep"],
+            data.get("numero"),
+            data["avicultor_id"]
         )
-        if endereco is None:
-            return None
-        logger.info(f"Endereço {id} atualizado")
-        return endereco
 
     def delete(self, id):
-        removido = self.enderecoRepository.delete(id)
-        logger.info(f"Endereço {id} removido: {removido}")
-        return removido
+        return self.enderecoRepository.delete(id)

@@ -1,4 +1,4 @@
-from app.repository.galinaceos_repository import GalinaceosRepository
+from app.repositories.GalinaceosRepository import GalinaceosRepository
 
 class GalinaceosService:
     @staticmethod

@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from sqlalchemy import text
 
-from helpers.database import db
+from app.helpers.database import db
 
 
 class IndexController(Resource):
